@@ -1,5 +1,18 @@
 <div class="container">
-  <h1>
-    Contacts
-  </h1>
+  <mat-card>
+    <div class="col-md-8 offset-md-2">
+      <nav mat-tab-nav-bar>
+        <a mat-tab-link [routerLink]="navLinks[0]" routerLinkActive #rla1="routerLinkActive" [active]="rla1.isActive">
+          View
+        </a>
+        <a mat-tab-link [routerLink]="navLinks[1]" routerLinkActive #rla2="routerLinkActive" [active]="rla2.isActive">
+          Fav
+        </a>
+        <a mat-tab-link [routerLink]="navLinks[2]" routerLinkActive #rla3="routerLinkActive" [active]="rla3.isActive">
+          Add
+        </a>
+      </nav>
+      <router-outlet></router-outlet>
+    </div>
+  </mat-card>
 </div>

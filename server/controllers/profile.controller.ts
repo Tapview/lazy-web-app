@@ -1,8 +1,8 @@
 import * as validator from 'validator';
 const User = require('../models/user.model');
+const Username = require('../models/username.model');
 const auth = require('./jwt-auth.controller');
-const {isValidDisplayUsername, normalizeUsername} =
-    require('./utils.controller');
+import { isValidDisplayUsername, normalizeUsername } from './utils.controller';
 
 import {uploadSingleImage} from '../services/image-upload';
 
@@ -33,23 +33,76 @@ function saveDetails(req, res) {
     return res.status(422).json({message: 'Request failed validation'});
   }
   const username = normalizeUsername(displayUsername);
-  return User.findOne({_id: userId})
-      .then((user) => {
+
+  const promises = [User.findOne({_id: userId}),
+    Username.findOne({username: username}),
+    Username.findOne({refId: userId, current: true})];
+
+  Promise.all(promises)
+      .then(([user, requestedUsername, currentUsername]) => {
         user.email = email;
         user.givenName = givenName;
         user.familyName = familyName;
-        user.username = username;
-        user.displayUsername = displayUsername;
-        return user.save()
+        let saveUser = false, saveCurrentUsername = false, saveRequestedUsername = false,
+            saveNewUsername = false;
+        let newUsername;
+
+        if (requestedUsername) {
+          if (requestedUsername.username !== currentUsername.username) {
+            if (requestedUsername.refId !== userId) {
+              return res.status(401).send({message: 'Username belongs to another user'});
+            } else {
+                if (requestedUsername.username === username) {
+                  if (requestedUsername.displayUsername !== displayUsername) {
+                    requestedUsername.displayUsername = displayUsername;
+
+                    saveRequestedUsername = true;
+                  } else {
+                    currentUsername.current = false;
+
+                    requestedUsername.current = true;
+                    saveCurrentUsername = true;
+                    saveRequestedUsername = true;
+                  }
+                }
+              }
+          } else {
+            saveUser = true;
+          }
+        } else {
+          newUsername = new Username();
+          newUsername.displayUsername = displayUsername;
+          newUsername.username = username;
+          newUsername.current = true;
+          newUsername.refId = userId;
+          newUsername.type = 'user';
+
+          currentUsername.current = false;
+
+          saveNewUsername = true;
+          saveCurrentUsername = true;
+        }
+        const promises2 = [];
+        if (saveUser) {
+          promises2.push(user.save());
+        }
+        if (saveCurrentUsername) {
+          promises2.push(currentUsername.save());
+        }
+        if (saveRequestedUsername) {
+          promises2.push(requestedUsername.save());
+        }
+        if (saveNewUsername) {
+          promises2.push(newUsername.save());
+        }
+
+        return Promise.all(promises2)
             .then(() => {
-              return res.send({message: 'Details Changed successfully'});
+              res.send({message: 'Details changed successfully'});
             })
-            .catch((err) => {
-              return res.status(500).send({message: 'Error in saving changes'});
+            .catch(() => {
+              res.status(500).send({message: 'Error in saving user details'});
             });
-      })
-      .catch((err) => {
-        return res.status(500).send({message: 'UserId not found'});
       });
 }
 
@@ -61,7 +114,8 @@ function saveDetails(req, res) {
  */
 
 function profileImageUpload(req, res) {
-  const userId = req.userId;
+  const userId = req.query.id;
+
   if (typeof userId !== 'string') {
     return res.status(422).json({message: 'Error in UserId'});
   }
@@ -74,7 +128,7 @@ function profileImageUpload(req, res) {
           user.profileImage = req.file.fileLocation;
           return user.save()
               .then(() => {
-                return res.status(200).send({message: 'Image Uploaded Successfully'});
+                return res.send({message: 'Image Uploaded Successfully'});
               })
               .catch(() => {
                 return res.status(500).send({message: 'Error in uploading image'});

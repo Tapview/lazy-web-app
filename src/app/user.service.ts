@@ -30,7 +30,6 @@ export class UserService {
   // next called. The '1' refers to how many states are kept in the buffer to be
   // replay for the subscription.
   userObservable: Subject<User> = new ReplaySubject<User>(1);
-
   nav: NavObj;
 
   // Local storage variables
@@ -58,6 +57,14 @@ export class UserService {
       this.jwtRefreshTokenExp = undefined;
       this.localStorageService.clear('user-service.jwt-refresh-token-exp');
     }
+  }
+
+  normalizeUsername(username) {
+    return username
+        .split('.').join('')
+        .split('_').join('')
+        .split('-').join('')
+        .toLowerCase();
   }
 
   /**
@@ -264,7 +271,6 @@ export class UserService {
 
 export interface User {
   id: string;
-  username: string;
   displayUsername: string;
   givenName: string;
   familyName: string;
@@ -273,7 +279,6 @@ export interface User {
   isAdmin: boolean;
   profileImage: string;
 }
-
 
 interface NavObj {
   route: string;

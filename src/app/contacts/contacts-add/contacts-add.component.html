@@ -1,0 +1,46 @@
+<div class="simple-form-aligner">
+  <mat-card class="simple-form-card">
+    <div *ngIf='!submitSuccess'>
+      <mat-card-title>Please add contact </mat-card-title>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit(form.value)">
+          <div class="form-group">
+            <mat-form-field class="simple-form-field-50">
+              <input matInput placeholder="Given name" name="givenName" formControlName="givenName">
+            </mat-form-field>
+            <mat-form-field class="simple-form-field-50">
+              <input matInput placeholder="Family name" name="familyName" formControlName="familyName">
+            </mat-form-field>
+            <br>
+            <mat-form-field class="simple-form-field-100">
+              <input matInput placeholder="Email" name="email" formControlName="email">
+              <mat-error>
+                Not a valid email
+              </mat-error>
+            </mat-form-field>
+            <br>
+            <button [disabled]="waiting" class="simple-form-button" color="primary" mat-raised-button type="submit"
+              value="submit">
+              Add contact
+            </button>
+            <mat-progress-spinner *ngIf="waiting" color="primary" mode="indeterminate" class="simple-form-spinner"
+              [diameter]=22>
+            </mat-progress-spinner>
+            <span *ngIf='formErrorMessage' class="text-error-color">
+              {{formErrorMessage}}
+            </span>
+          </div>
+        </form>
+      </mat-card-content>
+    </div>
+    <div *ngIf='submitSuccess'>
+      <mat-card-title>Success</mat-card-title>
+      <mat-card-subtitle>
+        You have successfully added a new contact.
+      </mat-card-subtitle>
+      <button routerLink='/contacts/view' class="simple-form-button" color="primary" mat-raised-button>
+        View contacts
+      </button>
+    </div>
+  </mat-card>
+</div>

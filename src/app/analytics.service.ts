@@ -21,6 +21,38 @@ export class AnalyticsService {
     this.gtag = window['gtag'];
     // Initialise the gtag
     this.gtag('js', new Date());
+
+
+    // Facebook Pixel Code
+    // Note, that the pixel load <noscript> is not included because Angular
+    // cannot be used with noscript
+    // !function(f,b,e,v,n,t,s)
+    // {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    // n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    // if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    // n.queue=[];t=b.createElement(e);t.async=!0;
+    // t.src=v;s=b.getElementsByTagName(e)[0];
+    // s.parentNode.insertBefore(t,s)}(window, document,'script',
+    // 'https://connect.facebook.net/en_US/fbevents.js');
+    // fbq('init', environment.facebookPixelId);
+    // fbq('track', 'PageView'); // (this should record all state change events)
+
+
+    // fbq('track', 'Purchase', {
+    //   value: price,
+    //   currency: currency,
+    //   content_ids: contentId
+    // });
+    // fbq('track', 'Lead');
+    // fbq('track', 'CompleteRegistration');
+    // fbq('track', 'AddPaymentInfo');
+    // fbq('track', 'AddToCart');
+    // fbq('track', 'InitiateCheckout');
+    // fbq('track', 'Search');
+    // fbq('track', 'ViewContent', {
+    //   content_ids: contentId
+    // });
+
   }
 
   // Events: https://developers.google.com/analytics/devguides/collection/gtagjs/events

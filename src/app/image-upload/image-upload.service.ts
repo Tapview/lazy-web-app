@@ -8,13 +8,13 @@ export class ImageUploadService {
 
   constructor(private http: HttpClient) {}
 
-  public uploadImage(image: File): Observable< string | any> {
+  public uploadImage(routeForImageUpload: string, image: File, id: string): Observable< string | any> {
     const formData = new FormData();
 
     formData.append('image', image);
 
-    return this.http.post('/api/user/profile-image-upload', formData)
-        .pipe(map(((json: any) => json.imageUrl)));
+    return this.http.post(`${routeForImageUpload}?id=${id}`, formData)
+      .pipe(map(((json: any) => json.imageUrl)));
   }
 
 }

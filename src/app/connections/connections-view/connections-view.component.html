@@ -1,0 +1,41 @@
+<div class="container" *ngIf='confirmedConnections.length === 0'>
+  <mat-card>
+    <div class="col-md-8 offset-md-2">
+      <p> You dont have connections yet </p>
+    </div>
+  </mat-card>
+</div>
+<div *ngIf='confirmedConnections.length > 0'>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- givenName Column -->
+    <ng-container matColumnDef="Given Name">
+      <th mat-header-cell *matHeaderCellDef>
+        Given name
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.givenName}}
+      </td>
+    </ng-container>
+    <!-- familyName Column -->
+    <ng-container matColumnDef="Family Name">
+      <th mat-header-cell *matHeaderCellDef>
+        Family name
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.familyName}}
+      </td>
+    </ng-container>
+    <!-- action Column -->
+    <ng-container matColumnDef="Action">
+      <th mat-header-cell *matHeaderCellDef>
+        Delete connection
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button (click)="deleteConnection(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

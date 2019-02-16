@@ -69,6 +69,12 @@ export class AppComponent implements OnInit {
       isLoggedInRoute: true,
     },
     {
+      routerLink: '/organization',
+      icon: 'work',
+      title: 'Organization',
+      isLoggedInRoute: true,
+    },
+    {
       routerLink: '/mailing-list',
       icon: 'email',
       title: 'Mailing list',
@@ -90,6 +96,18 @@ export class AppComponent implements OnInit {
       title: 'Admin',
       isAdminRoute: true,
     },
+    {
+      routerLink: '/contacts',
+      icon: 'import_contacts',
+      title: 'Contacts',
+      isLoggedInRoute: true,
+    },
+    {
+      routerLink: '/connections',
+      icon: 'group',
+      title: 'Connections',
+      isLoggedInRoute: true,
+    }
   ];
 
 

@@ -1,14 +1,29 @@
 <div class="{{siteTheme}}">
+  <mat-toolbar color="primary" class="top-navbar" role="header">
+    <div><!-- <div class="mobile-visible" > -->
+      <button mat-icon-button (click)="toggleSideNavDrawer()">
+        <mat-icon>
+          menu
+        </mat-icon>
+      </button>
+    </div>
+    <img class="logo mobile-visible" 
+        src="/assets/img/logo-square-white.png" />
+    <span>
+    <!-- Below line was added to prevent the mat-drawer form highlighting the logo with an orange box -->
+    <a routerLink="/" (click)="hideSideNavAfterClick()"></a>
+    <a routerLink="/" (click)="hideSideNavAfterClick()">
+      <img class="logo desktop-visible" src="/assets/img/logo-long-white.png" />
+    </a>
+      {{title}}
+    </span>
+    <span class="navbar-spacer"></span>
+    
+    <app-user-dropdown></app-user-dropdown>
+  </mat-toolbar>
   <mat-drawer-container>
     <!-- Side nav -->
     <mat-drawer #sideNavDrawer [mode]="drawerMode" [opened]="drawerOpened" class="lwa-dark-theme">
-      <mat-toolbar class="logo-toolbar">
-        <!-- Below line was added to prevent the mat-drawer form highlighting the logo with an orange box -->
-        <a routerLink="/" (click)="hideSideNavAfterClick()"></a>
-        <a routerLink="/" (click)="hideSideNavAfterClick()">
-          <img class="logo-long" src="/assets/img/logo-long-white.png" />
-        </a>
-      </mat-toolbar>
       <mat-nav-list>
         <a *ngFor="let navLink of primaryNavLinks" mat-list-item
             [hidden]="(navLink.isAdminRoute && !userIsAdmin) || (navLink.isLoggedInRoute && !isLoggedIn)"
@@ -35,23 +50,7 @@
     </mat-drawer>
     <!-- Top nav -->
     <mat-drawer-content>
-      <mat-toolbar color="primary" class="top-navbar" role="header">
-        <div class="mobile-visible" >
-          <button mat-icon-button (click)="toggleSideNavDrawer()">
-            <mat-icon>
-              menu
-            </mat-icon>
-          </button>
-        </div>
-        <img class="logo-square mobile-visible" 
-            src="/assets/img/logo-square-white.png" />
-        <span>
-          {{title}}
-        </span>
-        <span class="navbar-spacer"></span>
-        
-        <app-user-dropdown></app-user-dropdown>
-      </mat-toolbar>
+      
       <!-- Route content -->
       <div class="content" #routerOutletParent>
         <router-outlet></router-outlet>

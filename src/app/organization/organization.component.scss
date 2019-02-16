@@ -1,0 +1,25 @@
+.addAndView{
+  display: inline-flex;
+  margin: 20px;
+}
+
+.organization-card {
+  width:330px;
+  max-width: 100%;
+}
+
+.icon {
+  display:flex;
+  margin-bottom: 7px;
+}
+
+.defaultLogo {
+  height: 222px;
+  font-size: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  background-color: lightgrey;
+}

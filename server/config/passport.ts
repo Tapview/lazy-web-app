@@ -26,6 +26,8 @@ import * as passport from 'passport';
 import * as passportLocal from 'passport-local';
 const LocalStrategy = passportLocal.Strategy;
 const User1 = require('../models/user.model');
+const Username = require('../models/username.model');
+const Auth = require('../models/auth.model');
 // Note: the above variable is set to "User1" instead of "User" because it
 // appears that passport has a User type declared in block scope.
 
@@ -34,24 +36,40 @@ passport.use(new LocalStrategy({
   passwordField: 'password',
 },
 function(username, password, done) {
-  User1.findOne({username: username}, function(err, user) {
-    if (err) {
-      return done(err);
+  Username.findOne({username: username, current: true, type: 'user'}, function(err1, usernameDocument) {
+    if (err1) {
+      return done(err1);
     }
-    // Return if user not found in database
-    if (!user) {
+    // Return if username not found in database
+    if (!usernameDocument) {
       return done(null, false, {
-        message: 'User not found',
+        message: 'Username not found',
       });
     }
-    // Return if password is wrong
-    if (!user.checkPassword(password)) {
-      return done(null, false, {
-        message: 'Password is incorrect',
+    Auth.findOne({userId: usernameDocument.refId}, function(err2, userAuth) {
+      if (err2) {
+        return done(err2);
+      }
+      // Return if password is incorrect
+      if (!userAuth.checkPassword(password)) {
+        return done(null, false, {
+          message: 'Password is incorrect',
+        });
+      }
+      User1.findOne({_id: usernameDocument.refId}, function(err3, user) {
+        if (err3) {
+          return done(err3);
+        }
+        // Return if user not found in database
+        if (!user) {
+          return done(null, false, {
+            message: 'User not found',
+          });
+        }
+        return done(null, user, usernameDocument);
       });
-    }
-    // If credentials are correct, return the user object
-    return done(null, user);
+    });
   });
-}
-));
+}));
+
+

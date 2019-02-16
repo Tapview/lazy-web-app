@@ -11,12 +11,14 @@ import { StatsService } from './stats.service';
 import { AnalyticsService } from './analytics.service';
 import { AuthGuard } from './auth.guard';
 import { AdminGuard } from './admin.guard';
-
+import { OrganizationService } from './organization.service';
+import { UserUsernameService } from './user-username.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 // Material modules
 import {
+  MatBadgeModule,
   MatAutocompleteModule,
   MatButtonModule,
   MatButtonToggleModule,
@@ -61,7 +63,6 @@ import { HelpComponent } from './help/help.component';
 import { SettingsComponent } from './settings/settings.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { FeedComponent } from './feed/feed.component';
-import { ContactsComponent } from './contacts/contacts.component';
 import { AboutComponent } from './about/about.component';
 import { LoginComponent } from './login/login.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
@@ -81,6 +82,19 @@ import { PrivacyComponent } from './privacy/privacy.component';
 import { FooterComponent } from './footer/footer.component';
 import { ImageUploadModule } from './image-upload/image-upload.module';
 import { ChangeThemeComponent } from './change-theme/change-theme.component';
+import { OrganizationComponent } from './organization/organization.component';
+import { CreateOrganizationComponent } from './create-organization/create-organization.component';
+import { UpdateOrganizationComponent } from './update-organization/update-organization.component';
+import { AddUserComponent } from './add-user/add-user.component';
+import { ContactsComponent } from './contacts/contacts.component';
+import { ContactsAddComponent } from './contacts/contacts-add/contacts-add.component';
+import { ContactsViewComponent } from './contacts/contacts-view/contacts-view.component';
+import { ContactsFavComponent } from './contacts/contacts-fav/contacts-fav.component';
+import { ConnectionComponent } from './connections/connections.component';
+import { ConnectionsAddComponent } from './connections/connections-add/connections-add.component';
+import { ConnectionsSentComponent } from './connections/connections-sent/connections-sent.component';
+import { ConnectionsRequestComponent } from './connections/connections-request/connections-request.component';
+import { ConnectionsViewComponent } from './connections/connections-view/connections-view.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +104,6 @@ import { ChangeThemeComponent } from './change-theme/change-theme.component';
     SettingsComponent,
     PageNotFoundComponent,
     FeedComponent,
-    ContactsComponent,
     AboutComponent,
     LoginComponent,
     ForgotPasswordComponent,
@@ -109,6 +122,19 @@ import { ChangeThemeComponent } from './change-theme/change-theme.component';
     PrivacyComponent,
     FooterComponent,
     ChangeThemeComponent,
+    ContactsComponent,
+    ContactsAddComponent,
+    ContactsFavComponent,
+    ContactsViewComponent,
+    ConnectionComponent,
+    ConnectionsAddComponent,
+    ConnectionsSentComponent,
+    ConnectionsRequestComponent,
+    ConnectionsViewComponent,
+    OrganizationComponent,
+    CreateOrganizationComponent,
+    UpdateOrganizationComponent,
+    AddUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -134,11 +160,6 @@ import { ChangeThemeComponent } from './change-theme/change-theme.component';
         data: { title: 'Feed' },
       },
       {
-        path: 'contacts',
-        component: ContactsComponent,
-        data: { title: 'Contacts' },
-      },
-      {
         path: 'help',
         component: HelpComponent,
         data: { title: 'Help' },
@@ -153,6 +174,30 @@ import { ChangeThemeComponent } from './change-theme/change-theme.component';
         path: 'mailing-list',
         component: MailingListComponent,
         data: { title: 'Mailing list' },
+      },
+      {
+        path: 'organization',
+        component: OrganizationComponent,
+        data: { title: 'Organization' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'create-organization',
+        component: CreateOrganizationComponent,
+        data: { title: 'Create Organization' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'organization/:orgUsername/update',
+        component: UpdateOrganizationComponent,
+        data: { title: 'Update Organization' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'organization/:orgUsername/add-user',
+        component: AddUserComponent,
+        data: { title: 'Add User' },
+        canActivate: [AuthGuard],
       },
       {
         path: 'settings',
@@ -207,6 +252,62 @@ import { ChangeThemeComponent } from './change-theme/change-theme.component';
         data: { title: 'Privacy' },
       },
       {
+        path: 'contacts',
+        component: ContactsComponent,
+        data: { title: 'Contacts' },
+        canActivate: [AuthGuard],
+        children:
+        [
+          {
+            path: '',
+            redirectTo: 'view',
+            pathMatch: 'full',
+          },
+          {
+            path: 'view',
+            component: ContactsViewComponent,
+          },
+          {
+            path: 'fav',
+            component: ContactsFavComponent,
+          },
+          {
+            path: 'add',
+            component: ContactsAddComponent,
+          }
+        ]
+      },
+      {
+        path: 'connections',
+        component: ConnectionComponent,
+        data: { title: 'Connections' },
+        canActivate: [AuthGuard],
+        children:
+        [
+          {
+            path: '',
+            redirectTo: 'view',
+            pathMatch: 'full',
+          },
+          {
+            path: 'view',
+            component: ConnectionsViewComponent,
+          },
+          {
+            path: 'add',
+            component: ConnectionsAddComponent,
+          },
+          {
+            path: 'sent',
+            component: ConnectionsSentComponent,
+          },
+          {
+            path: 'request',
+            component: ConnectionsRequestComponent
+          }
+         ]
+      },
+      {
         path: 'unauthorized',
         component: UnauthorizedComponent,
         data: { title: 'Unauthorized' },
@@ -230,6 +331,7 @@ import { ChangeThemeComponent } from './change-theme/change-theme.component';
     AngularFontAwesomeModule,
 
     // Material modules
+    MatBadgeModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -267,7 +369,7 @@ import { ChangeThemeComponent } from './change-theme/change-theme.component';
     ServiceWorkerModule.register('/ngsw-worker.js',
         {enabled: environment.production})
   ],
-  providers: [UserService, SettingsService, StatsService, AnalyticsService],
+  providers: [UserService, SettingsService, StatsService, AnalyticsService, OrganizationService, UserUsernameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

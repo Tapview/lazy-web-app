@@ -12,6 +12,8 @@ import { UserService, User } from '../user.service';
 export class ProfileComponent implements OnInit {
   form: FormGroup;
 
+  imageUploadRoute = '/api/user/profile-image-upload';
+
   waiting = false;
   disableButton = true;
   submitSuccess = false;
@@ -19,6 +21,9 @@ export class ProfileComponent implements OnInit {
   user: User;
   profileImage: string;
   usernameErrorMessage: string;
+  ratios = [{value: 1 / 1, view: '1 / 1'}, {value: 4 / 3, view: ' 4 / 3'}];
+  selectedRatio = 1 / 1;
+
   constructor(
     private snackBar: MatSnackBar,
     private http: HttpClient,
@@ -51,9 +56,9 @@ export class ProfileComponent implements OnInit {
 
     // this.currentUsername - designed to prevent the form from reporting an
     // error if the username has been updated
-    const initialUsername = this.user.username;
+    const initialUsername = this.userService.normalizeUsername(this.user.displayUsername);
     const displayUsername = this.user.displayUsername;
-    this.currentUsername = this.normalizeUsername(formData.username);
+    this.currentUsername = this.userService.normalizeUsername(formData.username);
     this.currentDisplayName = formData.username;
     if (initialUsername.length === 0) {
       this.form.controls['username'].setErrors({'incorrect': true});
@@ -66,8 +71,10 @@ export class ProfileComponent implements OnInit {
       return;
     }
     if (initialUsername !== this.currentUsername) {
-      this.http.post('/api/user/username-available', {
+      this.http.post('/api/username-available', {
             username: this.currentUsername,
+            storedUsername: this.user.displayUsername,
+            id: this.user.id,
           })
           .subscribe(data => {
             if (initialUsername !== this.currentUsername || this.currentDisplayName !== displayUsername) {
@@ -118,12 +125,12 @@ export class ProfileComponent implements OnInit {
     this.disableButton = true;
     this.submitSuccess = false;
     this.formErrorMessage = undefined;
-    const tempUsername = this.normalizeUsername(currentValue.username);
-    const tempDisplayName = this.user.displayUsername;
+    const tempUsername = this.userService.normalizeUsername(currentValue.username);
+    const tempDisplayUsername = this.user.displayUsername;
     fields.forEach(element => {
       if (this.user[element] !== currentValue[element]
-          || tempUsername !== this.user.username
-          || tempDisplayName !== currentValue.username) {
+          || tempUsername !== this.userService.normalizeUsername(this.user.displayUsername)
+          || tempDisplayUsername !== currentValue.username) {
         this.disableButton = false;
         return;
       }

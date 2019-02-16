@@ -1,43 +1,32 @@
-<label>
-  <span>
-    <mat-icon class='icon'>add_a_photo</mat-icon>
-  </span>
-  <input type='file'
-         accept='image/*'
-         (change)='processFile($event, imageCropper)'>
-</label>
+<div class="container">
+  <label>
+    <span>
+      <mat-icon class='icon'>add_a_photo</mat-icon>
+    </span>
+    <input type='file' accept='image/*' (change)='processFile($event, imageCropper, imageUploadRoute)'>
+  </label>
 
-<ng-template #imageCropper>
-  <h5 mat-dialog-title>Set Thumbnail</h5>
-  <mat-dialog-content>
-    <image-cropper class=dialogStyle 
-        [imageChangedEvent]="imageChangedEvent"
-        [maintainAspectRatio]="true"
-        [aspectRatio]="1 / 1"
-        format="jpeg"
-        (imageCroppedFile)="imageCropped($event)">
-    </image-cropper>
+  <ng-template #imageCropper>
+    <h5 mat-dialog-title>Set Thumbnail</h5>
+    <mat-dialog-content>
+      <image-cropper class="dialogStyle" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+        [aspectRatio]="ratio" format="jpeg" (imageCroppedFile)="imageCropped($event)">
+      </image-cropper>
 
-    <div *ngIf="selectedFile && imageChangedEvent">
-      <div [ngStyle] = "{'background-image': 'url(' + selectedFile.src + ')'}">
+      <div *ngIf="selectedFile && imageChangedEvent">
+        <div [ngStyle]="{'background-image': 'url(' + selectedFile.src + ')'}">
+        </div>
       </div>
-    </div>
-  </mat-dialog-content>
-  <mat-dialog-actions align='end'>
-    <button *ngIf="imageChangedEvent"
-            (click)='cancelCropping()'
-            mat-raised-button
-            color='warn'>Cancel
-    </button>
+    </mat-dialog-content>
+    <mat-dialog-actions align='end'>
+      <button *ngIf="imageChangedEvent" (click)='cancelCropping()' mat-raised-button color='warn'>Cancel
+      </button>
 
-    <button *ngIf="imageChangedEvent"
-            (click)= "uploadImage()"
-            mat-raised-button
-            cdkFocusInitial
-            color='primary'>
-      <span class='okButton'>
-        <mat-icon matSuffix>done</mat-icon>
-      </span>
-    </button>
-  </mat-dialog-actions>
-</ng-template>
+      <button *ngIf="imageChangedEvent" (click)="uploadImage()" mat-raised-button cdkFocusInitial color='primary'>
+        <span class='okButton'>
+          <mat-icon matSuffix>done</mat-icon>
+        </span>
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+</div>

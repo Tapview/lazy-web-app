@@ -7,9 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContactsComponent implements OnInit {
 
+  navLinks = [];
   constructor() { }
 
   ngOnInit() {
+    this.navLinks.push('./view');
+    this.navLinks.push('./fav');
+    this.navLinks.push('./add');
   }
 
 }

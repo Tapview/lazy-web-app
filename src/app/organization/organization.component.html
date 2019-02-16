@@ -1,0 +1,45 @@
+<div class="container">
+  <button routerLink='/create-organization' mat-raised-button color="primary" style="height: 50px; margin: 10px;">
+    <span style="display:inline-flex;">
+      <mat-icon>add</mat-icon>
+    </span>
+    New Organization
+  </button><br>
+  <div *ngFor="let organizations of organization;" class="addAndView">
+    <mat-card class="organization-card">
+      <mat-card-title>{{organizations.name}}</mat-card-title>
+      <hr>
+      <img *ngIf="organizations.logo" width="100%" [src]="organizations.logo" alt='Company Logo'>
+      <div *ngIf="!organizations.logo" class="defaultLogo">{{organizations.name}}</div>
+      <mat-card-content> <br>
+        <span class="icon">
+          <mat-icon style="font-size:22px;" matSuffix>language</mat-icon>
+          {{organizations.website}}
+        </span>
+        <span class="icon">
+          <mat-icon style="font-size:22px;" matSuffix>call</mat-icon>
+          {{organizations.phoneNumber}}
+        </span>
+        <span class="icon">
+          <mat-icon style="font-size:22px;" matSuffix>contacts</mat-icon>
+          {{username[organizations._id]}}
+        </span>
+        <span style="display:flex;">
+          <mat-icon style="font-size:22px;" matSuffix>person</mat-icon>
+          {{organizations.userCount}}
+        </span> <br>
+        <button *ngIf="userRoles[organizations._id].indexOf('admin') !== -1" mat-raised-button
+          (click)="updateOrg(username[organizations._id])" color="primary">
+          Update
+        </button>
+        <label *ngIf="userRoles[organizations._id].indexOf('admin') !== -1" style="float:right;">
+          <span (click)="addUserToOrg(username[organizations._id])">
+            <mat-icon style="cursor:pointer; font-size: 32px;">
+              person_add
+            </mat-icon>
+          </span>
+        </label>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,8 +1,9 @@
 import * as path from 'path';
-
+process.env.CONNECTION_TIMEOUT = (new Date().getTime() + 10 * (1000 * 60 * 60 * 24)).toString();
 process.env.JWT_EXPIRY = (10 * 60 * 1000).toString(); // Expiry in ms (10 mins), stored as string
 process.env.JWT_REFRESH_TOKEN_EXPIRY = (365 * 24 * 60 * 60 * 1000).toString(); // Expiry in ms (1 year), stored as string
 process.env.JWT_TEMPORARY_LINK_TOKEN_EXPIRY = (60 * 60 * 1000).toString(); // Expiry in ms (1 hour), stored as string
+process.env.XSRF_EXPIRY = (20 * 365 * 24 * 60 * 60 * 1000).toString(); // Expiry in ms (20 year), stored as string
 
 if (process.env.ENV_FILE_PRESENT !== 'true') {
   throw new Error('.env file appears to be missing. Try copying ".env.example" and renaming to ".env"');

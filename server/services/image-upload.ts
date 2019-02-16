@@ -7,7 +7,7 @@ const crypt = require('crypto');
  // The selection between GCS and AWS is made using the .env file and the
  // config.ts file.
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/gif') {
     cb(null, true);
   } else {
     cb(new Error('Invalid file type, only JPEG and PNG is allowed!'), false);

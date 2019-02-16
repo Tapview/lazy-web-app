@@ -41,6 +41,7 @@ export class RegisterComponent implements OnInit {
         // purposes of logging in that they are still redirected to the correct
         // on register success.
         this.activatedRoute.queryParams.subscribe((params: Params) => {
+          console.log(params);
           this.loginRegisterSwitchQueryParams = params;
           this.redirectUrl = params.redirect;
         });
@@ -81,7 +82,7 @@ export class RegisterComponent implements OnInit {
     }
     setTimeout(() => { // Wait 1 second before checking username
       if (initialUsername === this.currentUsername) {
-        this.http.post('/api/user/username-available', {
+        this.http.post('/api/username-available', {
               username: initialUsername,
             })
             .subscribe(data => {

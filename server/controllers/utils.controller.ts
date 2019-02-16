@@ -3,7 +3,7 @@ const usernameRegex = /^[a-z0-9]*$/;
 const displayUsernameRegex = /^[a-zA-Z0-9_.-]*$/;
 
 
-module.exports = {
+export {
   isValidUsername,
   isValidDisplayUsername,
   normalizeUsername,

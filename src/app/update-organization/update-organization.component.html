@@ -1,0 +1,102 @@
+<div *ngIf="!organization" class="container">
+  <mat-card>
+    You are not authorized to view this page.
+  </mat-card>
+</div>
+<div *ngIf="organization" class="simple-form-aligner">
+  <mat-card *ngIf="ready" class="simple-form-card">
+    <form [formGroup]="form" (ngSubmit)="submit(form.value)">
+      <mat-card-title> Update Organization </mat-card-title>
+      <mat-card-content>
+        <div class="organization-logo">
+          <img *ngIf='logo' mat-card-lg-image class="img-class" [src]="logo" alt='Organization Logo'>
+          <img *ngIf='!logo' mat-card-lg-image class="defaultLogo" alt='Organization Logo'>
+          <div class="app-image-upload-positioner">
+            <app-image-upload (imageUploaded)="handleImageUpload($event)" (imageError)="handleImageError()"
+              [imageUploadRoute]="imageUploadRoute" [ratio]="selectedRatio" [id]="organization._id">
+            </app-image-upload>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="simple-form-field-100">
+            <input matInput placeholder="Organization Name" name="name" formControlName="name">
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+          <mat-form-field class="simple-form-field-100">
+            <input matInput placeholder="Website" name="website" formControlName="website">
+          </mat-form-field>
+          <br>
+          <mat-form-field class="simple-form-field-100">
+            <input matInput placeholder="Phone Number" name="phoneNumber" formControlName="phoneNumber">
+          </mat-form-field>
+          <br>
+          <mat-form-field class="simple-form-field-100">
+            <input matInput placeholder="Username" name="username" formControlName="username">
+            <mat-error>{{usernameErrorMessage}}</mat-error>
+          </mat-form-field>
+          <br>
+          <button [disabled]="disableButton" class="simple-form-button" color="primary" mat-raised-button type="submit"
+            value="submit">
+            Save
+          </button>
+          <mat-progress-spinner *ngIf="waiting" color="primary" mode="indeterminate" class="simple-form-spinner"
+            [diameter]=22>
+          </mat-progress-spinner>
+          <span *ngIf='formErrorMessage' class="text-error-color">
+            {{formErrorMessage}}
+          </span>
+          <span *ngIf="submitSuccess" class="successMessage">
+            {{successMessage}}
+          </span>
+          <span *ngFor="let user_name of usernames" class="displayUsers">
+            <img mat-card-sm-image *ngIf="users[user_name.refId]" class="userImage" [src]="users[user_name.refId]" alt='Profile Image'>
+            <img mat-card-sm-image *ngIf="!users[user_name.refId]" class="userImage" src='assets/img/default-profile-photo.png'
+              alt='Profile Image'>
+            <span class="username">{{user_name.username}}</span>
+            <label (click)="userDialog(user_name.refId, deleteUser)">
+              <mat-icon class="removeIcon" matSuffix>block</mat-icon>
+            </label>
+          </span>
+        </div>
+        <ng-template #deleteUser>
+          <div style="width:300px;">
+            <mat-dialog-content style="text-align:center;">
+              Are you sure you want delete
+            </mat-dialog-content>
+            <mat-dialog-actions align='center'>
+              <button (click)="cancel()" mat-raised-button color='warn'>Cancel
+              </button>
+              <button (click)="removeUser()" mat-raised-button cdkFocusInitial color='primary'>Remove
+              </button>
+            </mat-dialog-actions>
+          </div>
+        </ng-template>
+      </mat-card-content>
+    </form>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Advanced
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <button mat-raised-button color="primary" (click)="deleteOrgDialog(modal)" class="simple-form-button">Delete
+          Organization
+        </button>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <ng-template #modal>
+      <mat-dialog-content>
+        <div>
+          Are you sure you want to delete this organization?
+        </div>
+      </mat-dialog-content>
+      <mat-dialog-actions align='end'>
+        <button (click)="cancel()" mat-raised-button color='warn'>Cancel
+        </button>
+        <button (click)="deleteOrg()" mat-raised-button cdkFocusInitial color='primary'>Yes
+        </button>
+      </mat-dialog-actions>
+    </ng-template>
+  </mat-card>
+</div>

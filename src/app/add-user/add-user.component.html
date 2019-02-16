@@ -1,0 +1,24 @@
+<div *ngIf="authorized" class="simple-form-aligner">
+  <mat-card class="simple-form-card">
+    <form [formGroup]="form" (ngSubmit)="submit(form.value)">
+      <mat-card-title>Add User</mat-card-title>
+      <mat-card-content>
+        <div class="form-group">
+          <mat-form-field class="simple-form-field-100">
+            <input matInput placeholder="Username to be added" name="username" formControlName="username">
+            <mat-error>Required</mat-error>
+          </mat-form-field>
+          <button mat-raised-button color="primary">Add user</button>
+          <span *ngIf='errorMessage' class="text-error-color">
+            {{errorMessage}}
+          </span>
+        </div>
+      </mat-card-content>
+    </form>
+  </mat-card>
+</div>
+<div *ngIf="!authorized" class="container">
+  <mat-card>
+    You are not authorized to view this page.
+  </mat-card>
+</div>

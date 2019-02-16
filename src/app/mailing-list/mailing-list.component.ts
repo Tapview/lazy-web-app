@@ -24,23 +24,11 @@ export class MailingListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.userService.isLoggedIn()) {
-      this.userService.userObservable
-          .subscribe(user => {
-            this.form = new FormGroup ({
-              givenName: new FormControl(user.givenName),
-              familyName: new FormControl(user.familyName),
-              email: new FormControl(user.email,
-                [Validators.required, Validators.email]),
-            });
-          });
-    } else {
-      this.form = new FormGroup ({
-        givenName: new FormControl(''),
-        familyName: new FormControl(''),
-        email: new FormControl('', [Validators.required, Validators.email]),
-      });
-    }
+    this.form = new FormGroup ({
+    givenName: new FormControl(''),
+    familyName: new FormControl(''),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    });
   }
 
   submit = function (formData) {
@@ -51,6 +39,7 @@ export class MailingListComponent implements OnInit {
     this.formErrorMessage = undefined;
     this.submitSuccess = false;
     this.waiting = true;
+  
     this.http.post('/api/join-mailing-list', {
           'givenName': formData.givenName,
           'familyName': formData.familyName,
@@ -64,11 +53,11 @@ export class MailingListComponent implements OnInit {
           //    verticalPosition: 'top',
           //    horizontalPosition: 'right',
           //  });
-          this.analytics.mailingList();
+          // this.analytics.mailingList();
         },
         errorResponse => {
           this.waiting = false;
-          this.formErrorMessage = 'There was a problem submitting the form.';
+          this.formErrorMessage = 'There was a problem submitting the form..';
         });
   };
 }

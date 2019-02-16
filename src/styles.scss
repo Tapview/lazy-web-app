@@ -52,6 +52,12 @@ body {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .desktop-visible{
+    display: none;
+  }
+}
+
 // Simple form styles
 .simple-form-aligner {
   display: flex;

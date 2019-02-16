@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, OnChanges} from '@angular/core';
 import { ImageUploadService } from './image-upload.service';
 import { UserService } from './../user.service';
 import { MatSnackBar } from '@angular/material';
@@ -15,16 +15,21 @@ class FileSnippet {
   templateUrl: './image-upload.component.html',
   styleUrls: ['./image-upload.component.scss']
 })
-export class ImageUploadComponent {
+export class ImageUploadComponent implements OnChanges {
 
   userService: UserService;
 
+  @Input() ratio;
   @Output() imageUploaded = new EventEmitter();
   @Output() imageError = new EventEmitter();
-  @Output() croppingCanceled = new EventEmitter();
+  @Output() imageUploadUrl = new EventEmitter();
+  @Input() imageUploadRoute;
+  @Input() id;
+  @Output() croppingCancelled = new EventEmitter();
 
   selectedFile: FileSnippet;
   imageChangedEvent: any;
+  imageUrl: string;
   modalReference = null;
   options: any = {
     size: 'dialog-centered',
@@ -32,6 +37,14 @@ export class ImageUploadComponent {
   };
 
   constructor(private imageService: ImageUploadService, private snackBar: MatSnackBar, public modalService: MatDialog) { }
+
+  ngOnChanges (changes) {
+    const ratio = changes.ratio;
+    if (ratio.previousValue !== ratio.currentValue) {
+      const newEvent = this.imageChangedEvent;
+      this.imageChangedEvent = null;
+  }
+}
 
   private onSuccess(imageUrl: string) {
     this.modalReference.close();
@@ -58,17 +71,19 @@ export class ImageUploadComponent {
 
   cancelCropping() {
     this.imageChangedEvent = null;
-    this.croppingCanceled.emit();
+    this.croppingCancelled.emit();
     this.modalReference.close();
   }
 
-  processFile(event: any, modal) {
+  processFile(event: any, modal, imageUrl) {
     this.selectedFile = undefined;
+    this.imageUrl = imageUrl;
     this.modalReference = this.modalService.open(modal, this.options);
     const URL = window.URL;
     let file, img;
 
-    if ((file = event.target.files[0]) && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg')) {
+    if ((file = event.target.files[0]) && (file.type === 'image/png' || file.type === 'image/jpeg' ||
+          file.type === 'image/jpg' || file.type === 'image/gif')) {
       img = new Image();
       img.onload = () => {
         this.imageChangedEvent = event;
@@ -89,7 +104,7 @@ export class ImageUploadComponent {
       const reader = new FileReader();
       reader.addEventListener('load', (event: any) => {
         this.selectedFile.pending = true;
-        this.imageService.uploadImage(this.selectedFile.file).subscribe(
+        this.imageService.uploadImage(this.imageUploadRoute, this.selectedFile.file, this.id).subscribe(
           (imageUrl: string) => {
             this.onSuccess(imageUrl);
           },

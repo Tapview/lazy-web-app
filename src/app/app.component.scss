@@ -9,6 +9,15 @@ mat-drawer-container {
   bottom: 0;
   left: 0;
   right: 0;
+
+  // Space the top for the navbar
+  margin-top: 64px;
+  @media (max-width: 768px) {
+    margin-top: 64px;
+  }
+  @media (max-width: 599px) {
+    margin-top: 56px;
+  }
 }
 
 .mat-drawer {
@@ -18,14 +27,6 @@ mat-drawer-container {
     linear-gradient( rgba(0, 0, 0, 0.8), rgba(0,0,0,.8) ),
     url($navDrawerImage);
   background-size: cover;
-}
-
-.logo-toolbar {
-  background-color: rgba(0, 0, 0, 0.2);
-  img {
-    height: 30px;
-    margin-top: 7px;
-  }
 }
 
 mat-drawer mat-icon {
@@ -38,7 +39,7 @@ mat-drawer mat-icon {
   top: 0;
   z-index: 1000;
   box-shadow: 0 8px 10px -5px rgba(0,0,0,.2), 0 16px 24px 2px rgba(0,0,0,.14), 0 6px 30px 5px rgba(0,0,0,.12);
-  .logo-square {
+  .logo {
     height: 30px;
     position: relative;
     margin-right: 8px;

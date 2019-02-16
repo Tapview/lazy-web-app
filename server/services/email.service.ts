@@ -148,8 +148,8 @@ module.exports = {
   //   familyName: 'Smith',
   //   resetUrl: 'https://google.com'});
 
-  sendUsernameRetrieval: function({givenName, familyName, email, userNameArr}) {
-    const usernamesString = userNameArr.join('<br>');
+  sendUsernameRetrieval: function({givenName, familyName, email, usernameArr}) {
+    const usernamesString = usernameArr.join('<br>');
     const msg = {
       to: email,
       from: config.organization.noReplyEmail,
