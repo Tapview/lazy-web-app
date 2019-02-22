@@ -342,7 +342,7 @@ function getConnectionCount(req, res) {
   // Save the login userId
   const userId = req.userId;
   return Connection.count({
-        userId: req.userId,
+        userId: userId,
         status: 'connected',
       })
       .then((result) => {
@@ -397,8 +397,13 @@ function getSentRequests(req, res) {
 function removeConnection(req, res) {
   // Save the login userId
   const userId = req.userId;
+  const senderUserId = req.body.senderUserId;
+  if (typeof senderUserId !== 'string') {
+    return res.status(422).json({ message: 'Request failed validation' });
+  }
+
   return Connection.findOneAndUpdate({
-        connectionId: req.userId,
+        connectionId: userId,
         userId: req.body.senderUserId,
       },
       {
@@ -407,7 +412,7 @@ function removeConnection(req, res) {
       .then((result) => {
         return Connection.findOneAndUpdate({
               connectionId: req.body.senderUserId,
-              userId: req.userId,
+              userId: userId,
             },
             {
               status: 'disconnected',

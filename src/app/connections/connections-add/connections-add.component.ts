@@ -42,7 +42,6 @@ export class ConnectionsAddComponent implements OnInit {
   requestUserConnection = function (formData) {
     this.IsAddUserRequest = true;
     this.http.post('/api/connection/add-request', {
-      'userId': this.user.id,
       'username': formData.username,
     })
       .subscribe(returnedResult => {
