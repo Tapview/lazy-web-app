@@ -1,96 +1,58 @@
-<div class="container" *ngIf='allContacts.length === 0'>
-  <mat-card>
-    <div class="col-md-8 offset-md-2">
-      <p> You dont have contacts </p>
-    </div>
-  </mat-card>
-</div>
-<div *ngIf='!isEditMode'>
-  <div *ngIf='allContacts.length > 0'>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-      <!-- Checkbox Column -->
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-            [indeterminate]="selection.hasValue() && !isAllSelected()">
-          </mat-checkbox>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-            [checked]="selection.isSelected(row)">
-          </mat-checkbox>
-        </td>
-      </ng-container>
-      <!-- givenName Column -->
-      <ng-container matColumnDef="Given Name">
-        <th mat-header-cell *matHeaderCellDef> Given name </th>
-        <td mat-cell *matCellDef="let element"> {{element.givenName}} </td>
-      </ng-container>
-      <!-- familyName Column -->
-      <ng-container matColumnDef="Family Name">
-        <th mat-header-cell *matHeaderCellDef> Family name </th>
-        <td mat-cell *matCellDef="let element"> {{element.familyName}} </td>
-      </ng-container>
-      <!-- email Column -->
-      <ng-container matColumnDef="Email">
-        <th mat-header-cell *matHeaderCellDef> Email </th>
-        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-      </ng-container>
-      <ng-container matColumnDef="Action">
-        <th mat-header-cell *matHeaderCellDef> Action </th>
-        <td mat-cell *matCellDef="let element">
-          <span *ngIf='!element.isFavorite'>
-            <button mat-icon-button (click)="addContactFav(element)">
-              <mat-icon>star_border</mat-icon>
-            </button>
-          </span>
-          <span *ngIf='element.isFavorite'>
-            <button mat-icon-button (click)="removeContactFav(element)">
-              <mat-icon>star</mat-icon>
-            </button>
-          </span>
-          <button mat-icon-button (click)="editContact(element)">
-            <mat-icon>create</mat-icon>
-          </button> <button mat-icon-button (click)="deleteContact(element)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-      </tr>
-    </table>
+<div *ngIf='isViewAll'>
+  <div class="container" *ngIf='contacts.length === 0'>
+    <mat-card>
+      <div class="col-md-8 offset-md-2">
+        <p> You dont have contacts </p>
+      </div>
+    </mat-card>
   </div>
 </div>
-<div class="simple-form-aligner" *ngIf='isEditMode'>
-  <mat-card class="simple-form-card">
-    <mat-card-title>Edit contact </mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="submit(form.value)">
-        <div class="form-group">
-          <mat-form-field class="simple-form-field-50">
-            <input matInput placeholder="Given name" name="givenName" formControlName="givenName">
-          </mat-form-field>
-          <mat-form-field class="simple-form-field-50">
-            <input matInput placeholder="Family name" name="familyName" formControlName="familyName">
-          </mat-form-field>
-          <br>
-          <mat-form-field class="simple-form-field-100">
-            <input matInput placeholder="Email" name="email" formControlName="email">
-            <mat-error>
-              Not a valid email
-            </mat-error>
-          </mat-form-field>
-          <br>
-          <button [disabled]="waiting" class="simple-form-button" color="primary" mat-raised-button type="submit"
-            value="submit" (click)="updateContact(form.value)">
-            Update contact
-          </button>
-          <mat-progress-spinner *ngIf="waiting" color="primary" mode="indeterminate" class="simple-form-spinner"
-            [diameter]=22>
-          </mat-progress-spinner>
+
+<div *ngIf='isViewAll'>
+  <button color="primary" class="simple-form-button pull-right" mat-raised-button routerLink='/contacts/add'>
+    +
+  </button>
+  <br>
+  <br>
+  <mat-card style="margin: 2px;" *ngFor="let contact of contacts">
+    <mat-card-header>
+      <img mat-card-avatar [src]="contact.contactImage">
+      <div class="contactStyle">
+        <div class="name" (click)="onSelect(contact)">
+          {{contact.givenName}}
+          &nbsp;
+          {{contact.familyName}}
         </div>
-      </form>
-    </mat-card-content>
+        <div class="email" (click)="onSelect(contact)">
+          {{contact.email}}
+        </div>
+        <div class="group" (click)="onSelect(contact)">
+          {{contact.groupName}}
+        </div>
+        <div class="controls">
+          <button mat-icon-button (click)="editContact(contact)">
+            <mat-icon>create</mat-icon>
+          </button> <button mat-icon-button (click)="contactDeleteDialog(modal)" (click)="openDeleteContact(contact)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-header>
   </mat-card>
 </div>
+<br>
+
+
+<ng-template #modal>
+  <mat-dialog-content>
+    <div>
+      Are you sure you want to delete the contact of <br> {{deleteContactName}}?
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align='center'>
+    <button (click)="resetForm()" mat-raised-button color='warn'>Cancel
+    </button>
+    <button (click)="deleteContact()" mat-raised-button cdkFocusInitial color='primary'>Yes
+    </button>
+  </mat-dialog-actions>
+</ng-template>

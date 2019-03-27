@@ -1,0 +1,55 @@
+<div class="container" *ngIf='groups.length === 0'>
+  <mat-card>
+    <div class="col-md-8 offset-md-2">
+      <p> You dont have groups </p>
+    </div>
+  </mat-card>
+</div>
+
+
+<div *ngIf='isViewAll'>
+    <button color="primary" class="simple-form-button pull-right" mat-raised-button routerLink='/contacts/groups/add'>
+      +
+    </button>
+    <br>
+    <br>
+    <mat-card style="margin: 2px;" *ngFor="let group of groups">
+  <mat-card-header>
+    <div class="GroupStyle">
+      <div class="groupName"  (click)="onSelect(group)">
+        {{group.groupName}}
+      </div>
+      <div class="contactsNumber"  (click)="onSelect(group)">
+          {{group.numberOfContacts}}
+        </div>
+      <div class="controls">
+          <button mat-icon-button (click)="editGroupForm(group)">
+              <mat-icon>create</mat-icon>
+        </button> 
+        <button mat-icon-button (click)="openDeleteGroup(group)" (click)="groupDeleteDialog(model)">
+            <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-header>
+</mat-card>
+</div>
+<br>
+
+<ng-template #model>
+  <mat-dialog-content>
+    <div>
+      <mat-card-title *ngIf='groupDetails.numberOfContacts > 0'> Are you sure you want to delete the group
+        {{groupDetails.groupName}} that has {{groupDetails.numberOfContacts}} contacts? </mat-card-title>
+      <mat-card-title *ngIf='groupDetails.numberOfContacts === 0'> You are about to delete the empty group
+        {{groupDetails.groupName}} </mat-card-title>
+
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align='center'>
+    <button (click)="resetForm()" mat-raised-button color='warn'>Cancel
+    </button>
+    <button (click)="deleteGroup()" mat-raised-button cdkFocusInitial color='primary'>Yes
+    </button>
+  </mat-dialog-actions>
+</ng-template>

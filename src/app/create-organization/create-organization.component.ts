@@ -11,6 +11,7 @@ import { UserService } from '../user.service';
 })
 export class CreateOrganizationComponent implements OnInit {
   disableButton = false;
+  waiting = false;
   form: FormGroup;
   formErrorMessage: string;
   usernameErrorMessage: string;
@@ -79,6 +80,7 @@ export class CreateOrganizationComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    this.waiting = true;
     this.formErrorMessage = undefined;
     this.disableButton = false;
     this.http.post('/api/organization/create', {
@@ -89,9 +91,11 @@ export class CreateOrganizationComponent implements OnInit {
     })
     .subscribe(() => {
       this.disableButton = false;
+      this.waiting = false;
       this.router.navigateByUrl('/organization');
     },
     (errorResponse) => {
+      this.waiting = false;
       this.formErrorMessage = errorResponse.error.message;
     });
   };

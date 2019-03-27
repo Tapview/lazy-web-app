@@ -1,0 +1,23 @@
+
+
+.contactStyle {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  justify-content: space-between;
+ .name {
+  width: 180px;
+  flex-grow: 1;
+ }
+ .email {
+  width: 180px;
+  flex-grow: 1;
+ }
+ .controls {
+  flex-grow: 1;
+  text-align: right;
+}
+}
+ 
+

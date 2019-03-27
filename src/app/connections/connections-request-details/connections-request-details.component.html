@@ -1,0 +1,37 @@
+
+
+<div *ngIf='isConnectionRequestLoaded'>
+  <br>
+  <mat-card-content>
+    <div class="profile-image">
+      <img mat-card-lg-image class="img-class" width="300" height="300"
+      [src]="user.profileImage">
+    </div>
+  </mat-card-content>
+  <mat-card>Name:  {{requestConnection.givenName}} {{requestConnection.familyName}}</mat-card>
+  <mat-card>Sent on: {{requestConnection.sendTimestamp}}</mat-card>
+  <br>
+  <div style="text-align:center">
+      <button
+          class="simple-form-button" 
+          color="primary" 
+          mat-raised-button 
+          type="submit" 
+          value="submit"
+          (click)="confirmConnectionRequest()">
+        Confirm
+      </button>
+      &nbsp;
+      &nbsp;
+      <button
+          class="simple-form-button" 
+          color="secondary" 
+          mat-raised-button 
+          type="submit" 
+          value="submit"
+          (click)="ignoreConnectionRequest()">
+        Ignore
+      </button>
+      </div>
+</div>
+  

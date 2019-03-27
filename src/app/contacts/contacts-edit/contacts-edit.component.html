@@ -1,0 +1,69 @@
+<div class="simple-form-aligner" *ngIf='isEditMode'>
+  <mat-card class="simple-form-card">
+    <mat-card-title>Edit contact </mat-card-title>
+    
+
+
+    <div class="profile-logo">
+      <img *ngIf='contactImage' mat-card-lg-image class="img-class" [src]="contactImage" alt='Organization Logo'>
+      <img *ngIf='!contactImage' mat-card-lg-image class="defaultLogo" alt='profile image here'>
+      <div class="app-image-upload-positioner">
+        <app-image-upload (imageUploaded)="handleImageUpload($event)" (imageError)="handleImageError()"
+          [imageUploadRoute]="imageUploadRoute" [ratio]="selectedRatio" [id]="contactIdURL">
+        </app-image-upload>
+      </div>
+      </div>
+
+
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit(form.value)">
+          <div class="form-group">
+            <mat-form-field class="simple-form-field-50">
+              <input matInput placeholder="Given name" name="givenName" formControlName="givenName">
+            </mat-form-field>
+            <mat-form-field class="simple-form-field-50">
+              <input matInput placeholder="Family name" name="familyName" formControlName="familyName">
+            </mat-form-field>
+            <br>
+            <mat-form-field class="simple-form-field-100">
+              <input matInput placeholder="Email" name="email" formControlName="email">
+              <mat-error>
+                Not a valid email
+              </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field class="example-chip-list">
+              <mat-chip-list #chipList>
+                <mat-chip *ngFor="let group of selectedGroups" [selectable]="selectable" [removable]="removable"
+                  (removed)="remove(group)">
+                  {{group}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Choose a group..." #groupInput [formControl]="groupCtrl" [matAutocomplete]="auto"
+                  [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let group of filteredGroups | async" [value]="group">
+                  {{group}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <br>
+            <div style="text-align: center">
+              <button [disabled]="waiting" class="simple-form-button" color="primary" mat-raised-button type="submit"
+                value="submit" (click)="updateContact(form.value)">
+                Update
+              </button>
+              <mat-progress-spinner *ngIf="waiting" color="primary" mode="indeterminate" class="simple-form-spinner"
+                [diameter]=22>
+              </mat-progress-spinner>
+              <span *ngIf='formErrorMessage' class="text-error-color">
+                {{formErrorMessage}}
+              </span>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+  </mat-card>
+</div>

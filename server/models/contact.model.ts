@@ -7,7 +7,8 @@ const ContactSchema = new Schema({
   givenName: { type: String },
   familyName: { type: String },
   email: { type: String },
-  isFavorite: { type: Boolean},
+  contactImage: {type: String},
+
   }
 );
 
@@ -15,6 +16,5 @@ const ContactSchema = new Schema({
 ContactSchema.index({userId: 1});
 ContactSchema.index({userId: 1, givenName: 1});
 ContactSchema.index({userId: 1, familyName: 1});
-ContactSchema.index({userId: 1, isFavorite: 1});
 
 module.exports = mongoose.model('Contact', ContactSchema);

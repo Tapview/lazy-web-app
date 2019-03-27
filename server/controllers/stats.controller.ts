@@ -71,9 +71,9 @@ function userRegisterCount(req, res) {
   // not necessary as not using req.body
 
   return User.count()
-        .then((count) => {
-          res.send({count: count});
-        });
+      .then((count) => {
+        res.send({count: count});
+      });
 }
 
 

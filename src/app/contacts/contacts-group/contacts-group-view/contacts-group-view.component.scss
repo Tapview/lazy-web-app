@@ -1,0 +1,25 @@
+
+
+.ListStyle {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  justify-content: space-between;
+ .listName {
+  width: 180px;
+  flex-grow: 1;
+ }
+ .contactsNumber {
+  width: 180px;
+  flex-grow: 1;
+ } 
+ .controls {
+  flex-grow: 1;
+  text-align: right;
+}
+}
+ 
+
+
+

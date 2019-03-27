@@ -1,0 +1,47 @@
+<div class="container" *ngIf='groupContact.length === 0'>
+  <mat-card>
+    <div class="col-md-8 offset-md-2">
+      <p> You dont have contacts into this Group </p>
+    </div>
+  </mat-card>
+</div>
+
+<mat-card style="margin: 2px;" *ngFor="let contact of groupContact">
+  <mat-card-header>
+    <img mat-card-avatar src="/assets/img/profile-demo.jpg">
+    <div class="contactStyle">
+      <div class="name" (click)="onSelect(contact)">
+        {{contact.givenName}}
+        &nbsp;
+        {{contact.familyName}}
+      </div>
+      <div class="email" (click)="onSelect(contact)">
+        {{contact.email}}
+      </div>
+      <div class="Group" >
+        {{contact.GroupName}}
+      </div>
+      <div class="controls">
+        <button mat-icon-button (click)="openRemoveContact(contact, modal)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-header>
+</mat-card>
+
+
+
+<ng-template #modal>
+  <mat-dialog-content>
+    <div>
+      Are you sure you want to remove the contact "{{removeContactName}}" from this Group?
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align='center'>
+    <button (click)="cancelDelete()" mat-raised-button color='warn'>Cancel
+    </button>
+    <button (click)="removeContact()" mat-raised-button cdkFocusInitial color='primary'>Yes
+    </button>
+  </mat-dialog-actions>
+</ng-template>

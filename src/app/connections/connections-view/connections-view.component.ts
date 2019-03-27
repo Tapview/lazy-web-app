@@ -1,12 +1,7 @@
-import {MatTableDataSource} from '@angular/material';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-
-
-export interface ConnectionRequestElements {
-  givenName: string;
-  familyName: number;
-}
+import { UserService, User } from '../../user.service';
+import { MatDialog, MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-connections-view',
@@ -14,41 +9,61 @@ export interface ConnectionRequestElements {
   styleUrls: ['./connections-view.component.scss']
 })
 export class ConnectionsViewComponent implements OnInit {
-  receiverUserId: string;
-  link: string;
+  user: User;
   confirmedConnections: { userId: string, givenName: string, familyName: string }[] = [];
-  displayedColumns: string[] = [ 'Given Name', 'Family Name', 'Action'];
-  dataSource = new MatTableDataSource<ConnectionRequestElements>();
+  deleteConfirmedConnection: { userId: string, givenName: string, familyName: string };
+  modalReference = null;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private userService: UserService,
+    private dialogService: MatDialog,
+    private snackBar: MatSnackBar, ) { }
 
   ngOnInit() {
+    this.userService.userObservable
+    .subscribe(user => {
+      this.user = user;
+    });
     this.loadConfirmedRequests();
   }
 
   loadConfirmedRequests = function () {
-    this.confirmedConnections = [];
     this.http.post('/api/connection/get-connections')
       .subscribe((data) => {
-        let num = 0;
-        for (num = 0; num < data.length; num++) {
-          this.confirmedConnections.push(
-            {
-              'userId': data[num].userId,
-              'givenName': data[num].givenName,
-              'familyName': data[num].familyName
-            });
-        }
-        this.dataSource = new MatTableDataSource<ConnectionRequestElements>(this.confirmedConnections);
+        this.confirmedConnections = data;
       });
   };
 
-  deleteConnection = function (connection) {
+  deleteConnectionConfirmation = function (connection, modal) {
+    this.deleteConfirmedConnection = connection;
+    this.modalReference = this.dialogService.open(modal);
+  };
+
+
+  deleteConnection = function () {
     this.http.post('/api/connection/remove-connection', {
-      'senderUserId': connection.userId,
+      'userId': this.user.id,
+      'senderUserId': this.deleteConfirmedConnection.userId,
     })
-      .subscribe(() => {
-        this.loadConfirmedRequests();
+    .subscribe((result) => {
+      if (result.message === 'Connection removed') {
+        this.confirmedConnections.splice(this.confirmedConnections.indexOf(this.deleteConfirmedConnection), 1);
+        this.resetForm();
+        this.snackBar.open('Connection removed.', 'Dismiss', {
+          duration: 2000,
+        });
+      }
+    },
+    errorResponse => {
+      // 422 or 500
+      this.snackBar.open('Connection cannot be removed, Please try later.', 'Dismiss', {
+        duration: 2000,
       });
+    });
+  };
+
+  resetForm = function() {
+    this.modalReference.close();
   };
 }

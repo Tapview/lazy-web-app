@@ -1,3 +1,23 @@
-table {
+.contactStyle {
   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  justify-content: space-between;
+ .givenName {
+    width: 180px;
+    flex-grow: 1;
 }
+ .familyName {
+    width: 150px;
+    flex-grow: 1;
+}
+ .controls {
+  flex-grow: 1;
+  text-align: right;
+}
+}
+ 
+
+
+
